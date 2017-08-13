@@ -9,7 +9,7 @@ export class RecursiveInputsResolver implements InputsResolverInterface {
     }
 
     resolve(props:any): Array<ResolvedInput> {
-        let children = props as ChildrenListInterface;
+        let children = props.children as ChildrenListInterface;
         let resolvedChildren = [] as Array<ResolvedInput>;
 
         Object.values(children).map(val => {
