@@ -1,33 +1,32 @@
 import * as React from 'react';
 import {ResolvedInput} from '../ResolvedInput';
 import {ChildrenListInterface} from "./ChildrenListInterface";
-import {SingleInputResolverInterface} from "./SingleInputResolverInterface";
 import {InputsResolverInterface} from "../InputsResolverInterface";
+import {InputResolverInterface} from "./InputResolverInterface";
 
 export class RecursiveInputsResolver implements InputsResolverInterface {
-    constructor(public singleInputResolver: SingleInputResolverInterface) {
+    constructor(public singleInputResolver: InputResolverInterface) {
     }
 
     resolve(props:any): Array<ResolvedInput> {
         let children = props.children as ChildrenListInterface;
         let resolvedChildren = [] as Array<ResolvedInput>;
 
-        Object.values(children).map(val => {
-            if (this.singleInputResolver.canResolve(val)) {
+        Object.values(children).map(childProps => {
+            try {
+                let resolvedInput = this.singleInputResolver.resolve(childProps);
                 resolvedChildren.push(
-                    this.singleInputResolver.resolve(val)
+                    this.singleInputResolver.resolve(resolvedInput)
                 );
-            } else if (Object.hasOwnProperty.call(val, 'children')) {
-                resolvedChildren = [
-                    ...resolvedChildren,
-                    ...this.resolve(
-                        val.children as ChildrenListInterface
-                    ),
-                ];
-            } else {
-                // resolvedChildren.push(
-                //     <input id={val.widget_attributes.id} key={key} name={val.widget_attributes.full_name}></input>
-                // );
+            } catch (e) {
+                if (Object.hasOwnProperty.call(childProps, 'children')) {
+                    resolvedChildren = [
+                        ...resolvedChildren,
+                        ...this.resolve(childProps),
+                    ];
+                } else {
+                    throw e;
+                }
             }
         });
 

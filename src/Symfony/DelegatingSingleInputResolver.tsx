@@ -1,37 +1,21 @@
 import {ResolvedInput} from "../ResolvedInput";
 import {SingleInputResolverInterface} from "./SingleInputResolverInterface";
+import {InputResolverInterface} from "./InputResolverInterface";
 
-export class DelegatingSingleInputResolver implements SingleInputResolverInterface {
-    private renderers: Array<SingleInputResolverInterface> = [];
+export class DelegatingSingleInputResolver implements InputResolverInterface {
+    private resolvers: Array<SingleInputResolverInterface> = [];
 
     addResolver(resolver:SingleInputResolverInterface) {
-        this.renderers.push(resolver);
-    }
-
-    canResolve(inputProps:any): boolean {
-        for (let renderer of this.renderers) {
-            if (renderer.canResolve(inputProps)) {
-                return true;
-            }
-        }
-
-        return false;
+        this.resolvers.push(resolver);
     }
 
     resolve(inputProps:any): ResolvedInput {
-        for (let renderer of this.renderers) {
-            if (renderer.canResolve(inputProps)) {
-                return renderer.resolve(inputProps);
+        for (let resolver of this.resolvers) {
+            if (resolver.canResolve(inputProps)) {
+                return resolver.resolve(inputProps);
             }
         }
 
-        throw new CannotFoundRendererException(inputProps);
-    }
-}
-
-class CannotFoundRendererException {
-    message:string;
-    constructor(props:{}) {
-        this.message = `Cannot find renderer for props "${JSON.stringify(props)}"`;
+        throw `Cannot find renderer for props "${JSON.stringify(inputProps)}"`;
     }
 }

@@ -11,8 +11,8 @@ export class CoreSingleInputResolver implements SingleInputResolverInterface{
         let prefixes = inputProps.widget_attributes.block_prefixes;
         let attrs = inputProps.widget_attributes;
         return !!(
-            prefixes.includes('birthday') ||
-            prefixes.includes('date') ||
+            // prefixes.includes('birthday') ||
+            // prefixes.includes('date') ||
             prefixes.includes('textarea') ||
             Object.hasOwnProperty.call(attrs, 'value') ||
             Object.hasOwnProperty.call(prefixes, 'choice')
@@ -27,7 +27,9 @@ export class CoreSingleInputResolver implements SingleInputResolverInterface{
             props['defaultValue'] = attrs.value;
         }
 
-        if (prefixes.includes('birthday') || prefixes.includes('date')) {
+        if ((prefixes.includes('birthday') || prefixes.includes('date'))
+            && (!Object.hasOwnProperty.call(attrs, 'widget') || attrs.widget !== 'single_text')
+        ) {
             return new ResolvedInput(attrs.id, 'input', {type:'date', ...props});
         }
 
@@ -48,6 +50,6 @@ export class CoreSingleInputResolver implements SingleInputResolverInterface{
             return new ResolvedInput(attrs.id, 'input', props);
         }
 
-        throw 'cannot resolve';
+        throw `cannot resolve ${JSON.stringify(inputProps)}`;
     }
 }
