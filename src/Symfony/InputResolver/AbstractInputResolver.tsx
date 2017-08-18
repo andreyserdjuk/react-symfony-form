@@ -10,7 +10,12 @@ export abstract class AbstractInputResolver implements SingleInputResolverInterf
 
     protected resolveCommonProps(props: ChildInterface) {
         let attrs = props.widget_attributes;
-        let resolvedProps:{[key:string]:string} = {id:attrs.id, name:attrs.full_name};
+        let resolvedProps:{[key:string]:string} = {
+            id:     attrs.id,
+            name:   attrs.full_name,
+        };
+
+        /** @see https://facebook.github.io/react/docs/uncontrolled-components.html  */
         if (attrs.value) {
             resolvedProps['defaultValue'] = attrs.value;
         }
