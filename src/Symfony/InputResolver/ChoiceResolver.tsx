@@ -44,6 +44,8 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
                             type={inputType}
                             name={c.widget_attributes.name}
                             value={c.widget_attributes.value}
+                            disabled={c.widget_attributes.disabled}
+                            checked={Boolean(c.widget_attributes.checked)}
                         >
                             {c.widget_attributes.label}
                         </input>
