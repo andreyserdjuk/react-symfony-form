@@ -3,9 +3,9 @@ import * as React from 'react';
 export class ResolvedInput {
     public attrs:{[key:string]:any};
     public tagname:string;
-    public key:string;
+    public key:string|number;
 
-    constructor(key:string, tagname:string, attrs:{[key:string]:any}) {
+    constructor(key:string|number, tagname:string, attrs:{[key:string]:any}) {
         this.key = key;
         this.tagname = tagname;
         this.attrs = attrs;

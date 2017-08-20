@@ -1,33 +1,57 @@
+import * as React from 'react';
 import {SingleInputResolverInterface} from "../SingleInputResolverInterface";
 import {ChildInterface} from "../ChildInterface";
 import {ResolvedInput} from "../../ResolvedInput";
 import {AbstractInputResolver} from "./AbstractInputResolver";
+import {ChoiceAttrInterface} from "../ChoiceAttrInterface";
+import {InputHTMLAttributes} from "react";
 
 export class ChoiceResolver extends AbstractInputResolver implements SingleInputResolverInterface {
 
     canResolve(props: ChildInterface): boolean {
         /** @var props.widget_attributes.block_prefixes = ["form","choice","_form_choice"] */
         return props.widget_attributes.block_prefixes.includes('choice') &&
-               props.widget_attributes.block_prefixes.length == 3 &&
-               props.children == null;
+               props.widget_attributes.block_prefixes.length == 3;
     }
 
     resolve(props: ChildInterface): ResolvedInput {
         const resolvedProps = this.resolveCommonProps(props);
+        const wa = props.widget_attributes;
+        const multiple = wa.multiple == null
+            ? false
+            : wa.multiple;
+        const children:Array<React.ReactNode> = [];
 
-        // todo
-        if (props.widget_attributes.multipart) {
-            /**
-             * if props.widget_attributes.multiple = false
-             * @var props.widget_attributes.children[0].widget_attributes
-             *      = ["form","checkbox","radio","_form_choice_entry"]
-             * @var props.widget_attributes.children[0].widget_attributes
-             *      = ["form","checkbox","_form_choice_multiple_expanded_entry"]
-             * */
+        let rootTagName = 'div';
+        const rootElementAttrs:InputHTMLAttributes<{}> = {};
 
+        if (wa.expanded == null || wa.expanded == false) {
+            rootTagName = 'select';
+            rootElementAttrs.multiple = multiple;
+
+            if (wa.choices instanceof Array) {
+                wa.choices.map((c:ChoiceAttrInterface) => {
+                    children.push(<option value={c.value}>{c.label}</option>);
+                });
+            }
         } else {
+            const inputType = multiple? 'checkbox' : 'radio';
+
+            if (props.children instanceof Array) {
+                props.children.map((c:ChildInterface) => {
+                    children.push(
+                        <input
+                            type={inputType}
+                            name={c.widget_attributes.name}
+                            value={c.widget_attributes.value}
+                        >
+                            {c.widget_attributes.label}
+                        </input>
+                    );
+                });
+            }
         }
 
-        return new ResolvedInput(resolvedProps.id, 'input', {type:'text', ...resolvedProps});
+        return new ResolvedInput(resolvedProps.id, rootTagName, {children, ...resolvedProps, multiple});
     }
 }

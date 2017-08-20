@@ -19,5 +19,6 @@ export interface WidgetAttributesInterface {
     // submitted: boolean,
     checked?: boolean,
     expanded?: boolean,
+    multiple?: boolean,
     block_prefixes: Array<string>,
 }
