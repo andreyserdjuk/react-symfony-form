@@ -10,8 +10,12 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
 
     canResolve(props: ChildInterface): boolean {
         /** @var props.widget_attributes.block_prefixes = ["form","choice","_form_choice"] */
-        return props.widget_attributes.block_prefixes.includes('choice') &&
-               props.widget_attributes.block_prefixes.length == 3;
+        return (props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 3) ||
+        /** @var props.widget_attributes.block_prefixes = ["form","choice","entity","_post_user"] */
+               (props.widget_attributes.block_prefixes.includes('entity') &&
+                props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 4);
     }
 
     resolve(props: ChildInterface): ResolvedInput {
