@@ -15,7 +15,25 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
         /** @var props.widget_attributes.block_prefixes = ["form","choice","entity","_post_user"] */
                (props.widget_attributes.block_prefixes.includes('entity') &&
                 props.widget_attributes.block_prefixes.includes('choice') &&
-                props.widget_attributes.block_prefixes.length == 4);
+                props.widget_attributes.block_prefixes.length == 4) ||
+        /** @var props.widget_attributes.block_prefixes = ["form","choice","country","_test_form_country"] */
+               (props.widget_attributes.block_prefixes.includes('country') &&
+                props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 4) ||
+        /** @var props.widget_attributes.block_prefixes = ["form","choice","language","_test_form_language"] */
+               (props.widget_attributes.block_prefixes.includes('language') &&
+                props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 4) ||
+        /** @var props.widget_attributes.block_prefixes = ["form","choice","locale","_test_form_locale"] */
+               (props.widget_attributes.block_prefixes.includes('locale') &&
+                props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 4) ||
+        /** @var props.widget_attributes.block_prefixes = ["form","choice","currency","_test_form_currency"] */
+               (props.widget_attributes.block_prefixes.includes('currency') &&
+                props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 4)
+            ;
+       //todo what about timezone? - need to refactor choice to use nested with optgroup
     }
 
     resolve(props: ChildInterface): ResolvedInput {
