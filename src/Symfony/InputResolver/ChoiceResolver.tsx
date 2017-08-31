@@ -5,6 +5,7 @@ import {ResolvedInput} from "../../ResolvedInput";
 import {AbstractInputResolver} from "./AbstractInputResolver";
 import {ChoiceAttrInterface} from "../ChoiceAttrInterface";
 import {InputHTMLAttributes} from "react";
+import {ChoiceOptGroupInterface} from "../ChoiceOptGroupInterface";
 
 export class ChoiceResolver extends AbstractInputResolver implements SingleInputResolverInterface {
 
@@ -52,7 +53,8 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
             rootElementAttrs.multiple = multiple;
 
             if (wa.choices instanceof Array) {
-                wa.choices.map((c:ChoiceAttrInterface) => {
+                wa.choices.map((c:ChoiceAttrInterface|ChoiceOptGroupInterface) => {
+                    // todo process ChoiceOptGroupInterface
                     children.push(<option value={c.value}>{c.label}</option>);
                 });
             }
