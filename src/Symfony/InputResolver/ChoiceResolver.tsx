@@ -61,11 +61,11 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
                         const optgroup = choice as ChoiceOptGroupInterface;
                         children.push(
                             <optgroup label={optgroup.label}>
-                                {
-                                    optgroup.choices.map((optgroupChoice:ChoiceAttrInterface) =>
-                                            <option value={optgroupChoice.value}>{optgroupChoice.label}</option>
-                                    )
-                                }
+                            {
+                                optgroup.choices.map((optgroupChoice:ChoiceAttrInterface) =>
+                                    <option value={optgroupChoice.value}>{optgroupChoice.label}</option>
+                                )
+                            }
                             </optgroup>
                         );
                     } else {
