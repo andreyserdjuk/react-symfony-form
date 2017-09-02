@@ -32,9 +32,12 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
         /** @var props.widget_attributes.block_prefixes = ["form","choice","currency","_test_form_currency"] */
                (props.widget_attributes.block_prefixes.includes('currency') &&
                 props.widget_attributes.block_prefixes.includes('choice') &&
+                props.widget_attributes.block_prefixes.length == 4) ||
+        /** @var props.widget_attributes.block_prefixes = ["form","choice","timezone","_test_form_timezone"] */
+               (props.widget_attributes.block_prefixes.includes('timezone') &&
+                props.widget_attributes.block_prefixes.includes('choice') &&
                 props.widget_attributes.block_prefixes.length == 4)
             ;
-       //todo what about timezone? - need to refactor choice to use nested with optgroup
     }
 
     resolve(props: ChildInterface): ResolvedInput {
@@ -53,9 +56,22 @@ export class ChoiceResolver extends AbstractInputResolver implements SingleInput
             rootElementAttrs.multiple = multiple;
 
             if (wa.choices instanceof Array) {
-                wa.choices.map((c:ChoiceAttrInterface|ChoiceOptGroupInterface) => {
-                    // todo process ChoiceOptGroupInterface
-                    children.push(<option value={c.value}>{c.label}</option>);
+                wa.choices.map((choice:ChoiceAttrInterface|ChoiceOptGroupInterface) => {
+                    if (choice.hasOwnProperty('choices')) {
+                        const optgroup = choice as ChoiceOptGroupInterface;
+                        children.push(
+                            <optgroup label={optgroup.label}>
+                                {
+                                    optgroup.choices.map((optgroupChoice:ChoiceAttrInterface) =>
+                                            <option value={optgroupChoice.value}>{optgroupChoice.label}</option>
+                                    )
+                                }
+                            </optgroup>
+                        );
+                    } else {
+                        const singleChoice = choice as ChoiceAttrInterface;
+                        children.push(<option value={singleChoice.value}>{singleChoice.label}</option>);
+                    }
                 });
             }
         } else {
